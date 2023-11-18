@@ -1,71 +1,34 @@
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-
-<style>
-    .page-content{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 100px 300px;
-        
-    }
-    .text-gray{
-      color:gray
-    }
-</style>
+{% extends "base.html" %}
+{% block content %}
 
 <!-- Always shows a header, even in smaller screens. -->
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-      <div class="mdl-layout__header-row">
-        <!-- Title -->
-        <span class="mdl-layout-title">Welcome, {{ request.user.first_name }}</span>
-        <!-- Add spacer, to align navigation to the right -->
-        <div class="mdl-layout-spacer"></div>
-        <!-- Navigation. We hide it in small screens. -->
-        <nav class="mdl-navigation mdl-layout--large-screen-only">
-          <a class="mdl-navigation__link" href="">Link</a>
-          <a class="mdl-navigation__link" href="">Link</a>
-          <a class="mdl-navigation__link" href="">Link</a>
-          <a class="mdl-navigation__link" href="">Link</a>
-        </nav>
-      </div>
-    </header>
-    <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">Chatroom</span>
-      <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-      </nav>
-    </div>
-    <main class="mdl-layout__content">
-      <div class="page-content">
-        <div class="chat-box">
-        {% for message in messages %}
-        <div class="chat">
-          <span class="text-gray">[{{ message.created_at }}]</span> {{ message.author}}: <i>{{ message.text }}</i>
-        </div>
-        {% endfor %}
-        <form action="/chat/" method="post">
-          {% csrf_token %}
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-              <input name="textmessage" class="mdl-textfield__input" type="text" id="sample3">
-              <label class="mdl-textfield__label" for="sample3">Text...</label>
-            </div>
-          </div>
-          
+<div class="chat-box">
+  {% if request.user.is_authenticated %}
 
-
-
-        <!-- Accent-colored raised button with ripple -->
-<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-    Send
-  </button>
-</form>
-      </div>
-    </main>
+  {% for message in messages %}
+  <div class="chat">
+    <span class="text-gray">[{{ message.created_at }}]</span> {{ message.author}}: <i>{{ message.text }}</i>
   </div>
+  {% endfor %}
+  <form action="/chat/" method="post">
+    {% csrf_token %}
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input name="textmessage" class="mdl-textfield__input" type="text" id="sample3">
+        <label class="mdl-textfield__label" for="sample3">Text...</label>
+      </div>
+    </div>
+    
+
+
+
+  <!-- Accent-colored raised button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+Send
+</button>
+</form>
+{% else %}
+<h1>Not Logged in</h1>
+<p>You are not logged in. Please login in to see chat!</p><br>
+Please click <a href="/login/">here</a>
+{% endif %}
+{% endblock %}
