@@ -1,0 +1,19 @@
+.page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 300px;
+  gap: 10px;
+}
+input {
+  width: 300px !important;
+}
+.text-gray {
+  color: gray;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
