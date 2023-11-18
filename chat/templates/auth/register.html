@@ -1,10 +1,10 @@
 {% extends "base.html" %} {% block content %}
 
-<h1>Login</h1>
-{% if wrongPassword %}
-<p>Benutzername oder Password ist falsch!</p>
+<h1>Register</h1>
+{% if pwdDontMatch %}
+<p>Passwords don't match!</p>
 {% endif %}
-<form action="/login/" method="POST">
+<form action="/register/" method="POST">
   {% csrf_token %}
   <input type="hidden" name="redirect" value="{{ redirect }}" />
   <div>
@@ -20,7 +20,16 @@
     <input
       class="mdl-textfield__input"
       placeholder="Password"
-      name="password"
+      name="pwd"
+      type="password"
+      id="pwd"
+    />
+  </div>
+  <div>
+    <input
+      class="mdl-textfield__input"
+      placeholder="Confirm Password"
+      name="confirmPwd"
       type="password"
       id="pwd"
     />
@@ -29,12 +38,9 @@
     <button
       class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
     >
-      Log In
+      Sign Up
     </button>
   </div>
 </form>
 
-<div>
-  <span>Not a user yet? <a href="/register">Click here!</a></span>
-</div>
 {% endblock %}
