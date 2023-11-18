@@ -5,9 +5,14 @@
 <style>
     .page-content{
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         padding: 100px 300px;
+        
+    }
+    .text-gray{
+      color:gray
     }
 </style>
 
@@ -39,14 +44,19 @@
     </div>
     <main class="mdl-layout__content">
       <div class="page-content">
-
-
+        <div class="chat-box">
+        {% for message in messages %}
+        <div class="chat">
+          <span class="text-gray">[{{ message.created_at }}]</span> {{ message.author}}: <i>{{ message.text }}</i>
+        </div>
+        {% endfor %}
         <form action="/chat/" method="post">
           {% csrf_token %}
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
               <input name="textmessage" class="mdl-textfield__input" type="text" id="sample3">
               <label class="mdl-textfield__label" for="sample3">Text...</label>
             </div>
+          </div>
           
 
 
