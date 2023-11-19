@@ -1,20 +1,101 @@
+<style>
+  #msgContainer {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+</style>
+
 {% extends "base.html" %}
 {% block content %}
 
 <!-- Always shows a header, even in smaller screens. -->
+
+<script>
+  async function sendMessage(){
+    let form = createFormData();
+    
+    date = getDate();
+    try{
+     placeholderMsg();
+     let json = await sendBackendMessage(form);
+      rmvPlaceholder();
+      showNewMsg(json, date);
+      messageField.value = '';
+  } catch(e){
+    console.error('An error occured', e);
+  }
+
+  }
+
+  function createFormData(){
+    let fd = new FormData();
+    let token = '{{ csrf_token }}'
+    fd.append('textmessage', messageField.value)
+    fd.append('csrfmiddlewaretoken', token)
+    return fd
+  }
+
+  function placeholderMsg(){
+    return  msgContainer.innerHTML += `
+    <div id="deleteMessage" class="chat">
+    <span class="text-gray">${date}</span> {{ request.user.first_name }}: <i class="text-gray">${messageField.value}</i>
+  </div>
+    `
+  }
+
+  async function sendBackendMessage(fd){
+    let response = await fetch('/chat/', {
+      body: fd,
+      method: 'POST'
+    })
+    let resp_json = await response.json()
+    let parse = JSON.parse(resp_json)
+    return parse;
+  }
+
+  function rmvPlaceholder(){
+    console.log('removing')
+    document.getElementById('deleteMessage').remove();
+  }
+
+  function showNewMsg(parse){
+    msgContainer.innerHTML += `
+    <div class="chat">
+    <span class="text-gray">${date}</span> {{ request.user.first_name }}: <i>${parse.fields.text}</i>
+  </div>
+    `
+  }
+
+  function getDate(){
+const currentDate = new Date();
+const monthNames = [
+  'Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.',
+  'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'
+];
+let month = monthNames[currentDate.getMonth()];
+let day = currentDate.getDate();
+let year = currentDate.getFullYear();
+const formattedDate = `[${month} ${day}, ${year}]`;
+return formattedDate;
+  }
+</script>
+
 <div class="chat-box">
   {% if request.user.is_authenticated %}
 
+  <div id="msgContainer">
   {% for message in messages %}
   <div class="chat">
     <span class="text-gray">[{{ message.created_at }}]</span> {{ message.author}}: <i>{{ message.text }}</i>
   </div>
   {% endfor %}
-  <form action="/chat/" method="post">
+</div>
+  <form onsubmit="sendMessage(); return false;" method="post">
     {% csrf_token %}
       <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input name="textmessage" class="mdl-textfield__input" type="text" id="sample3">
-        <label class="mdl-textfield__label" for="sample3">Text...</label>
+        <input name="textmessage" class="mdl-textfield__input" type="text" id="messageField">
+        <label class="mdl-textfield__label" for="messageField">Text...</label>
       </div>
     </div>
     

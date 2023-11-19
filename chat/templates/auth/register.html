@@ -2,7 +2,7 @@
 
 <h1>Register</h1>
 {% if pwdDontMatch %}
-<p>Passwords don't match!</p>
+<p style="color: red">Passwords don't match!</p>
 {% endif %}
 <form action="/register/" method="POST">
   {% csrf_token %}
@@ -14,6 +14,7 @@
       name="username"
       type="text"
       id="username"
+      required
     />
   </div>
   <div>
@@ -23,6 +24,7 @@
       name="pwd"
       type="password"
       id="pwd"
+      required
     />
   </div>
   <div>
@@ -32,6 +34,7 @@
       name="confirmPwd"
       type="password"
       id="pwd"
+      required
     />
   </div>
   <div>
